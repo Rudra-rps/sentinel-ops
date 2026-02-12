@@ -1,0 +1,32 @@
+2026-02-12 10:44:12,582 - mcp_server.main - INFO - ============================================================
+2026-02-12 10:44:12,582 - mcp_server.main - INFO - SentinelOps MCP Server Starting
+2026-02-12 10:44:12,583 - mcp_server.main - INFO - Kubernetes Namespace: demo
+2026-02-12 10:44:12,583 - mcp_server.main - INFO - Prometheus URL: http://localhost:9090
+2026-02-12 10:44:12,583 - mcp_server.main - INFO - ============================================================
+2026-02-12 10:44:33,658 - mcp_server.main - INFO - ============================================================
+2026-02-12 10:44:33,658 - mcp_server.main - INFO - SentinelOps MCP Server Starting
+2026-02-12 10:44:33,658 - mcp_server.main - INFO - Kubernetes Namespace: demo
+2026-02-12 10:44:33,658 - mcp_server.main - INFO - Prometheus URL: http://localhost:9090
+2026-02-12 10:44:33,658 - mcp_server.main - INFO - ============================================================
+2026-02-12 10:45:22,483 - tools.k8s_client - INFO - Scaled nginx-demo to 5 replicas in demo
+2026-02-12 10:45:22,483 - mcp_server.main - INFO - Scaled nginx-demo to 5 replicas in demo
+2026-02-12 10:45:22,483 - mcp_server.main - INFO - Action: {"timestamp": "2026-02-12T10:45:22.483262", "action": "scale", "resource": "nginx-demo", "namespace": "demo", "details": {"replicas": 5}}
+2026-02-12 10:45:49,082 - mcp_server.main - INFO - Retrieved metrics for namespace demo
+2026-02-12 10:45:57,874 - tools.k8s_client - INFO - Scaled nginx-demo to 3 replicas in demo
+2026-02-12 10:45:57,874 - mcp_server.main - INFO - Scaled nginx-demo to 3 replicas in demo
+2026-02-12 10:45:57,875 - mcp_server.main - INFO - Action: {"timestamp": "2026-02-12T10:45:57.875475", "action": "scale", "resource": "nginx-demo", "namespace": "demo", "details": {"replicas": 3}}
+2026-02-12 10:56:20,955 - mcp_server.main - INFO - ============================================================
+2026-02-12 10:56:20,955 - mcp_server.main - INFO - SentinelOps MCP Server Starting
+2026-02-12 10:56:20,955 - mcp_server.main - INFO - Kubernetes Namespace: demo
+2026-02-12 10:56:20,955 - mcp_server.main - INFO - Prometheus URL: http://localhost:9090
+2026-02-12 10:56:20,955 - mcp_server.main - INFO - ============================================================
+2026-02-12 10:56:56,137 - mcp_server.main - INFO - ============================================================
+2026-02-12 10:56:56,137 - mcp_server.main - INFO - SentinelOps MCP Server Starting
+2026-02-12 10:56:56,137 - mcp_server.main - INFO - Kubernetes Namespace: demo
+2026-02-12 10:56:56,137 - mcp_server.main - INFO - Prometheus URL: http://localhost:9090
+2026-02-12 10:56:56,137 - mcp_server.main - INFO - ============================================================
+2026-02-12 10:57:27,981 - mcp_server.main - INFO - ============================================================
+2026-02-12 10:57:27,981 - mcp_server.main - INFO - SentinelOps MCP Server Starting
+2026-02-12 10:57:27,981 - mcp_server.main - INFO - Kubernetes Namespace: demo
+2026-02-12 10:57:27,981 - mcp_server.main - INFO - Prometheus URL: http://localhost:9090
+2026-02-12 10:57:27,981 - mcp_server.main - INFO - ============================================================
