@@ -1,0 +1,30 @@
+# SentinelOps - Autonomous AI SRE
+# Python dependencies
+
+# Web Framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+
+# HTTP Client
+requests==2.31.0
+
+# Kubernetes Client
+kubernetes==28.1.0
+
+# Prometheus Client
+prometheus-api-client==0.5.3
+
+# Additional FastAPI dependencies
+python-multipart==0.0.6
+pydantic==2.5.3
+
+# Data & Time
+python-dateutil==2.8.2
+
+# Logging (built-in but explicit for clarity)
+# logging - built-in
+
+# Testing (optional)
+pytest==7.4.3
+pytest-asyncio==0.21.1
+httpx==0.26.0

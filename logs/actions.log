@@ -30,3 +30,25 @@
 2026-02-12 10:57:27,981 - mcp_server.main - INFO - Kubernetes Namespace: demo
 2026-02-12 10:57:27,981 - mcp_server.main - INFO - Prometheus URL: http://localhost:9090
 2026-02-12 10:57:27,981 - mcp_server.main - INFO - ============================================================
+2026-02-12 10:58:02,997 - mcp_server.main - INFO - ============================================================
+2026-02-12 10:58:02,997 - mcp_server.main - INFO - SentinelOps MCP Server Starting
+2026-02-12 10:58:02,997 - mcp_server.main - INFO - Kubernetes Namespace: demo
+2026-02-12 10:58:02,997 - mcp_server.main - INFO - Prometheus URL: http://localhost:9090
+2026-02-12 10:58:02,997 - mcp_server.main - INFO - ============================================================
+2026-02-12 10:58:43,371 - mcp_server.main - INFO - ============================================================
+2026-02-12 10:58:43,371 - mcp_server.main - INFO - SentinelOps MCP Server Starting
+2026-02-12 10:58:43,371 - mcp_server.main - INFO - Kubernetes Namespace: demo
+2026-02-12 10:58:43,371 - mcp_server.main - INFO - Prometheus URL: http://localhost:9090
+2026-02-12 10:58:43,371 - mcp_server.main - INFO - ============================================================
+2026-02-12 10:59:01,473 - mcp_server.main - INFO - ============================================================
+2026-02-12 10:59:01,473 - mcp_server.main - INFO - SentinelOps MCP Server Starting
+2026-02-12 10:59:01,473 - mcp_server.main - INFO - Kubernetes Namespace: demo
+2026-02-12 10:59:01,473 - mcp_server.main - INFO - Prometheus URL: http://localhost:9090
+2026-02-12 10:59:01,473 - mcp_server.main - INFO - ============================================================
+2026-02-12 10:59:03,785 - mcp_server.main - INFO - ============================================================
+2026-02-12 10:59:03,785 - mcp_server.main - INFO - SentinelOps MCP Server Starting
+2026-02-12 10:59:03,785 - mcp_server.main - INFO - Kubernetes Namespace: demo
+2026-02-12 10:59:03,785 - mcp_server.main - INFO - Prometheus URL: http://localhost:9090
+2026-02-12 10:59:03,785 - mcp_server.main - INFO - ============================================================
+2026-02-12 10:59:22,217 - tools.k8s_client - INFO - Deleted pod nginx-demo-6fd48d9d57-8zkvc in demo
+2026-02-12 10:59:22,218 - tools.chaos - INFO - Crashed pod: nginx-demo-6fd48d9d57-8zkvc

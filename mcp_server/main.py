@@ -15,6 +15,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 from tools.k8s_client import k8s_client
 from tools.prometheus import prometheus_client
+from tools.chaos import chaos_engine
 from mcp_server.config import (
     K8S_NAMESPACE, PROMETHEUS_URL, LOG_LEVEL, 
     ACTIONS_LOG, INCIDENTS_LOG
@@ -354,6 +355,81 @@ def log_incident(incident: dict):
         }
     except Exception as e:
         logger.error(f"Error logging incident: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ============================================================================
+# CHAOS / SIMULATION ENDPOINTS
+# ============================================================================
+
+@app.post("/simulate/cpu_spike")
+def simulate_cpu_spike(
+    deployment: str = Query(default="nginx-demo"),
+    duration: int = Query(default=300)
+):
+    """
+    Simulate CPU spike using stress container
+    """
+    try:
+        result = chaos_engine.simulate_cpu_spike(deployment, duration)
+        return result
+    except Exception as e:
+        logger.error(f"Error simulating CPU spike: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/simulate/crash")
+def simulate_crash(deployment: str = Query(default="nginx-demo")):
+    """
+    Simulate pod crash by deleting a random pod
+    """
+    try:
+        result = chaos_engine.simulate_pod_crash(deployment)
+        return result
+    except Exception as e:
+        logger.error(f"Error simulating crash: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/simulate/cascade")
+def simulate_cascade(deployment: str = Query(default="nginx-demo")):
+    """
+    Simulate cascade failure by crashing multiple pods
+    """
+    try:
+        result = chaos_engine.simulate_cascade_failure(deployment)
+        return result
+    except Exception as e:
+        logger.error(f"Error simulating cascade failure: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/simulate/cleanup")
+def cleanup_simulations():
+    """
+    Clean up stress test pods
+    """
+    try:
+        result = chaos_engine.cleanup_stress_tests()
+        return result
+    except Exception as e:
+        logger.error(f"Error cleaning up simulations: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/chaos/status")
+def chaos_status():
+    """
+    Get status of active chaos simulations
+    """
+    try:
+        return {
+            "success": True,
+            "active_simulations": chaos_engine.get_active_simulations(),
+            "recent_events": chaos_engine.get_recent_events()
+        }
+    except Exception as e:
+        logger.error(f"Error getting chaos status: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
