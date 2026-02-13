@@ -16,6 +16,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 from tools.k8s_client import k8s_client
 from tools.prometheus import prometheus_client
 from tools.chaos import chaos_engine
+from agents.cost_analyzer import cost_analyzer
 from mcp_server.config import (
     K8S_NAMESPACE, PROMETHEUS_URL, LOG_LEVEL, 
     ACTIONS_LOG, INCIDENTS_LOG
@@ -60,14 +61,47 @@ def root():
         "name": "SentinelOps MCP Server",
         "version": "1.0.0",
         "status": "running",
+        "description": "Autonomous AI SRE for Kubernetes",
         "endpoints": {
-            "health": "/health",
-            "metrics": "/metrics",
-            "pods": "/pods",
-            "deployments": "/deployments",
-            "scale": "/scale",
-            "restart": "/restart",
-            "delete_pod": "/delete_pod"
+            "core": {
+                "health": "/health",
+                "metrics": "/metrics",
+                "pods": "/pods",
+                "deployments": "/deployments",
+                "nodes": "/nodes"
+            },
+            "dashboard": {
+                "stats": "/dashboard/stats?hours=24",
+                "summary": "/stats/summary"
+            },
+            "control": {
+                "scale": "/scale",
+                "restart": "/restart",
+                "delete_pod": "/delete_pod"
+            },
+            "cost": {
+                "current": "/cost/current",
+                "savings": "/cost/savings?hours=24",
+                "recommendations": "/cost/recommendations",
+                "breakdown": "/cost/breakdown?hours=24"
+            },
+            "incidents": {
+                "list": "/incidents?limit=50",
+                "log": "/incidents (POST)"
+            },
+            "chaos": {
+                "cpu_spike": "/simulate/cpu_spike",
+                "crash": "/simulate/crash",
+                "cascade": "/simulate/cascade",
+                "cleanup": "/simulate/cleanup",
+                "status": "/chaos/status"
+            }
+        },
+        "docs": "/docs",
+        "frontend_tips": {
+            "best_endpoint": "/dashboard/stats - All data in one call",
+            "quick_stats": "/stats/summary - Lightweight metrics",
+            "real_time": "Poll /dashboard/stats every 5-10 seconds"
         }
     }
 
@@ -355,6 +389,189 @@ def log_incident(incident: dict):
         }
     except Exception as e:
         logger.error(f"Error logging incident: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ============================================================================
+# COST ANALYSIS ENDPOINTS
+# ============================================================================
+
+@app.get("/cost/current")
+def get_current_cost():
+    """
+    Get current infrastructure cost based on running resources
+    """
+    try:
+        cost_data = cost_analyzer.calculate_current_cost()
+        return {
+            "success": True,
+            "timestamp": datetime.now().isoformat(),
+            "cost": cost_data
+        }
+    except Exception as e:
+        logger.error(f"Error calculating current cost: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/cost/savings")
+def get_savings(hours: int = Query(default=24)):
+    """
+    Calculate savings from auto-scaling over specified time period
+    """
+    try:
+        savings_data = cost_analyzer.calculate_savings(hours)
+        return {
+            "success": True,
+            "timestamp": datetime.now().isoformat(),
+            "savings": savings_data
+        }
+    except Exception as e:
+        logger.error(f"Error calculating savings: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/cost/recommendations")
+def get_cost_recommendations():
+    """
+    Get cost optimization recommendations
+    """
+    try:
+        recommendations = cost_analyzer.get_optimization_recommendations()
+        return {
+            "success": True,
+            "timestamp": datetime.now().isoformat(),
+            "recommendations": recommendations,
+            "count": len(recommendations)
+        }
+    except Exception as e:
+        logger.error(f"Error getting recommendations: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/cost/breakdown")
+def get_cost_breakdown(hours: int = Query(default=24)):
+    """
+    Get comprehensive cost breakdown with analysis
+    """
+    try:
+        breakdown = cost_analyzer.get_cost_breakdown(hours)
+        return {
+            "success": True,
+            "timestamp": datetime.now().isoformat(),
+            "breakdown": breakdown
+        }
+    except Exception as e:
+        logger.error(f"Error getting cost breakdown: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ============================================================================
+# DASHBOARD / STATS ENDPOINTS
+# ============================================================================
+
+@app.get("/dashboard/stats")
+def get_dashboard_stats(hours: int = Query(default=24)):
+    """
+    Get comprehensive stats for dashboard (one-stop endpoint for frontend)
+    Combines metrics, cost, incidents, and recommendations
+    """
+    try:
+        # Gather all data
+        pods = k8s_client.get_pods(K8S_NAMESPACE)
+        deployments = k8s_client.get_deployments(K8S_NAMESPACE)
+        metrics = prometheus_client.get_all_metrics(K8S_NAMESPACE)
+        current_cost = cost_analyzer.calculate_current_cost()
+        savings = cost_analyzer.calculate_savings(hours)
+        recommendations = cost_analyzer.get_optimization_recommendations()
+        
+        # Get recent incidents
+        incidents = []
+        incident_file = Path(INCIDENTS_LOG)
+        if incident_file.exists():
+            with open(incident_file, 'r') as f:
+                lines = f.readlines()
+                for line in lines[-20:]:  # Last 20 incidents
+                    try:
+                        incidents.append(json.loads(line.strip()))
+                    except json.JSONDecodeError:
+                        continue
+        
+        # Calculate success rate
+        successful_incidents = len([i for i in incidents if i.get('result', {}).get('success', False)])
+        success_rate = (successful_incidents / len(incidents) * 100) if len(incidents) > 0 else 100.0
+        
+        # Build comprehensive response
+        return {
+            "success": True,
+            "timestamp": datetime.now().isoformat(),
+            "cluster": {
+                "namespace": K8S_NAMESPACE,
+                "total_pods": len(pods),
+                "total_deployments": len(deployments),
+                "healthy_pods": len([p for p in pods if p.get('status') == 'Running']),
+                "unhealthy_pods": len([p for p in pods if p.get('status') != 'Running'])
+            },
+            "metrics": {
+                "cpu_usage": round(metrics.get("cpu_usage", 0.0), 1),
+                "memory_usage": round(metrics.get("memory_usage", 0.0), 1),
+                "pod_count": metrics.get("pod_count", 0),
+                "timestamp": metrics.get("timestamp", datetime.now().isoformat())
+            },
+            "cost": {
+                "hourly": current_cost.get("hourly_cost", 0),
+                "daily": current_cost.get("daily_cost", 0),
+                "monthly": current_cost.get("monthly_cost", 0),
+                "total_pods": current_cost.get("total_pods", 0),
+                "total_cpu_cores": current_cost.get("total_cpu_cores", 0),
+                "total_memory_gb": current_cost.get("total_memory_gb", 0)
+            },
+            "savings": {
+                "total_saved": savings.get("total_saved", 0),
+                "time_period_hours": hours,
+                "projected_monthly": savings.get("projected_monthly_savings", 0),
+                "projected_yearly": savings.get("projected_yearly_savings", 0),
+                "scale_down_count": savings.get("scale_down_count", 0),
+                "scale_up_count": savings.get("scale_up_count", 0)
+            },
+            "incidents": {
+                "total": len(incidents),
+                "successful": successful_incidents,
+                "success_rate": round(success_rate, 1),
+                "recent": incidents[-10:] if len(incidents) > 10 else incidents
+            },
+            "recommendations": recommendations[:5],  # Top 5 recommendations
+            "health": {
+                "status": "healthy" if success_rate > 80 else "degraded",
+                "kubernetes": "connected",
+                "prometheus": "connected" if prometheus_client.is_healthy() else "disconnected"
+            }
+        }
+    except Exception as e:
+        logger.error(f"Error getting dashboard stats: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/stats/summary")
+def get_stats_summary():
+    """
+    Quick summary stats (lighter version of dashboard/stats)
+    """
+    try:
+        pods = k8s_client.get_pods(K8S_NAMESPACE)
+        metrics = prometheus_client.get_all_metrics(K8S_NAMESPACE)
+        current_cost = cost_analyzer.calculate_current_cost()
+        
+        return {
+            "success": True,
+            "timestamp": datetime.now().isoformat(),
+            "pods": len(pods),
+            "cpu": round(metrics.get("cpu_usage", 0.0), 1),
+            "memory": round(metrics.get("memory_usage", 0.0), 1),
+            "daily_cost": current_cost.get("daily_cost", 0),
+            "status": "operational"
+        }
+    except Exception as e:
+        logger.error(f"Error getting summary stats: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 

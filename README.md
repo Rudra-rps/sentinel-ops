@@ -345,12 +345,18 @@ CYCLE #5 - 2026-02-12 14:30:00
 
 ## 🔌 API Reference
 
+> **📖 Complete API Documentation:** See [API.md](API.md) for comprehensive documentation with examples, TypeScript types, and frontend integration guide.
+
+**Quick Reference:**
+
 ### Health & Status
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | `/` | GET | API information |
 | `/health` | GET | Health check (K8s + Prometheus) |
+| `/dashboard/stats` | GET | **All-in-one dashboard data** |
+| `/stats/summary` | GET | **Lightweight real-time stats** |
 
 ### Metrics
 
@@ -359,6 +365,15 @@ CYCLE #5 - 2026-02-12 14:30:00
 | `/metrics` | GET | All metrics for namespace |
 | `/metrics/cpu` | GET | CPU usage metrics |
 | `/metrics/memory` | GET | Memory usage metrics |
+
+### Cost Analysis 💰
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/cost/current` | GET | Current infrastructure cost |
+| `/cost/savings` | GET | Calculate savings from auto-scaling |
+| `/cost/recommendations` | GET | Cost optimization suggestions |
+| `/cost/breakdown` | GET | Comprehensive cost analysis |
 
 ### Kubernetes Resources
 
@@ -394,7 +409,12 @@ CYCLE #5 - 2026-02-12 14:30:00
 | `/simulate/cleanup` | POST | Clean up stress tests |
 | `/chaos/status` | GET | Active simulations |
 
-**Full API documentation:** http://localhost:8000/docs (interactive Swagger UI)
+**Interactive API docs:** http://localhost:8000/docs (Swagger UI)
+
+**Test the backend:**
+```bash
+python test_backend.py
+```
 
 ---
 

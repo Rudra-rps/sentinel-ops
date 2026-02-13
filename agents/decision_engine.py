@@ -51,7 +51,7 @@ class DecisionEngine:
         """
         self.running = True
         logger.info("=" * 70)
-        logger.info("🛡️  SENTINELOPS DECISION ENGINE STARTED")
+        logger.info("SENTINELOPS DECISION ENGINE STARTED")
         logger.info("=" * 70)
         logger.info(f"Monitoring namespace: {self.namespace}")
         logger.info(f"Decision interval: {self.interval} seconds")
@@ -72,19 +72,19 @@ class DecisionEngine:
                 self.run_cycle()
                 
                 if self.running:
-                    logger.info(f"\n⏱️  Sleeping for {self.interval} seconds...")
+                    logger.info(f"\n[SLEEP] Sleeping for {self.interval} seconds...")
                     time.sleep(self.interval)
                     
         except Exception as e:
             logger.error(f"Fatal error in decision loop: {e}", exc_info=True)
         finally:
             logger.info("\n" + "=" * 70)
-            logger.info("🛡️  SENTINELOPS DECISION ENGINE STOPPED")
+            logger.info("SENTINELOPS DECISION ENGINE STOPPED")
             logger.info("=" * 70)
     
     def _signal_handler(self, signum, frame):
         """Handle shutdown signals"""
-        logger.info("\n\n🛑 Shutdown signal received...")
+        logger.info("\n\nShutdown signal received...")
         self.running = False
     
     def run_cycle(self):
@@ -95,57 +95,57 @@ class DecisionEngine:
         
         try:
             # STEP 1: Monitor
-            logger.info("\n📊 STEP 1: Collecting metrics...")
+            logger.info("\n[STEP 1] Collecting metrics...")
             metrics = self.monitor.collect_metrics()
             logger.info(f"   CPU: {metrics.get('cpu_usage', 0):.1f}% | "
                        f"Memory: {metrics.get('memory_usage', 0):.1f}% | "
                        f"Pods: {metrics.get('pod_count', 0)}")
             
             # STEP 2: Analyze
-            logger.info("\n🔍 STEP 2: Analyzing for issues...")
+            logger.info("\n[STEP 2] Analyzing for issues...")
             issues = self.monitor.analyze_metrics(metrics)
             
             if not issues:
-                logger.info("   ✅ No issues detected - system healthy")
+                logger.info("   [OK] No issues detected - system healthy")
                 return
             
-            logger.info(f"   ⚠️  Found {len(issues)} issue(s):")
+            logger.info(f"   [WARN] Found {len(issues)} issue(s):")
             for issue in issues:
                 logger.info(f"      - [{issue['severity'].upper()}] {issue['type']}: {issue['message']}")
             
             # STEP 3: Decide
-            logger.info("\n🧠 STEP 3: Deciding on actions...")
+            logger.info("\n[STEP 3] Deciding on actions...")
             actions = self.decide_actions(issues, metrics)
             
             if not actions:
-                logger.info("   ℹ️  No actions needed")
+                logger.info("   [INFO] No actions needed")
                 # Still log incidents even if no action taken
                 for issue in issues:
                     self.tracker.log_incident(issue)
                 return
             
-            logger.info(f"   📋 Planned {len(actions)} action(s):")
+            logger.info(f"   [PLAN] Planned {len(actions)} action(s):")
             for action in actions:
                 logger.info(f"      - {action['type']}: {action.get('description', '')}")
             
             # STEP 4: Act
-            logger.info("\n⚡ STEP 4: Executing actions...")
+            logger.info("\n[STEP 4] Executing actions...")
             results = self.execute_actions(actions, issues)
             
             # STEP 5: Log
-            logger.info("\n📝 STEP 5: Logging incidents...")
+            logger.info("\n[STEP 5] Logging incidents...")
             for i, issue in enumerate(issues):
                 if i < len(results):
                     action = actions[i]
                     result = results[i]
                     self.tracker.log_incident(issue, action, result)
                     
-                    status = "✅ Success" if result.get("success") else "❌ Failed"
+                    status = "[SUCCESS]" if result.get("success") else "[FAILED]"
                     logger.info(f"   {status}: {action['type']} for {issue['type']}")
             
             # STEP 6: Summary
             duration_ms = (time.time() - start_time) * 1000
-            logger.info(f"\n⏱️  Cycle completed in {duration_ms:.0f}ms")
+            logger.info(f"\n[TIMING] Cycle completed in {duration_ms:.0f}ms")
             
         except Exception as e:
             logger.error(f"Error in decision cycle: {e}", exc_info=True)
