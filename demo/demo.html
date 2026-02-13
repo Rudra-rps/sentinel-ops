@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SentinelOps - Quick Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .metric-card {
+            background: white;
+            border-radius: 10px;
+            padding: 24px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+        
+        .metric-label {
+            color: #666;
+            font-size: 1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .metric-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .status {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .status-item:last-child {
+            border-bottom: none;
+        }
+        
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .badge-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .controls {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            transition: background 0.2s;
+        }
+        
+        .btn:hover {
+            background: #5568d3;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+        }
+        
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        
+        .log {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        
+        .log-entry {
+            margin-bottom: 8px;
+            padding: 4px;
+        }
+        
+        .log-success { color: #4ec9b0; }
+        .log-error { color: #f48771; }
+        .log-info { color: #569cd6; }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: white;
+            font-size: 1.2em;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid white;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ SentinelOps</h1>
+            <p>Autonomous AI SRE - Live Demo</p>
+        </div>
+        
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Connecting to backend...</p>
+        </div>
+        
+        <div id="dashboard" style="display: none;">
+            <!-- Metrics Grid -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon">💻</div>
+                    <div class="metric-value" id="cpu-value">--</div>
+                    <div class="metric-label">CPU Usage</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-icon">🧠</div>
+                    <div class="metric-value" id="memory-value">--</div>
+                    <div class="metric-label">Memory Usage</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-icon">📦</div>
+                    <div class="metric-value" id="pods-value">--</div>
+                    <div class="metric-label">Active Pods</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-icon">💰</div>
+                    <div class="metric-value" id="cost-value">--</div>
+                    <div class="metric-label">Daily Cost</div>
+                </div>
+            </div>
+            
+            <!-- Status -->
+            <div class="status">
+                <h2 style="margin-bottom: 15px;">System Status</h2>
+                <div class="status-item">
+                    <span>Backend Server</span>
+                    <span class="badge badge-success" id="backend-status">Connected</span>
+                </div>
+                <div class="status-item">
+                    <span>Kubernetes</span>
+                    <span class="badge" id="k8s-status">Checking...</span>
+                </div>
+                <div class="status-item">
+                    <span>Prometheus</span>
+                    <span class="badge" id="prom-status">Checking...</span>
+                </div>
+                <div class="status-item">
+                    <span>Success Rate</span>
+                    <span class="badge badge-success" id="success-rate">--</span>
+                </div>
+            </div>
+            
+            <!-- Controls -->
+            <div class="controls">
+                <h2 style="margin-bottom: 15px;">🔥 Chaos Testing</h2>
+                <button class="btn" onclick="triggerCPUSpike()">⚡ Trigger CPU Spike</button>
+                <button class="btn btn-danger" onclick="crashPod()">💥 Crash Random Pod</button>
+                <button class="btn" onclick="viewDocs()">📚 View API Docs</button>
+                <button class="btn" onclick="refreshData()">🔄 Refresh Data</button>
+            </div>
+            
+            <!-- Log -->
+            <div class="log" id="log">
+                <div class="log-info">Waiting for events...</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE = 'http://127.0.0.1:8000';
+        let updateInterval;
+        
+        // Initialize
+        async function init() {
+            try {
+                // Test connection
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('dashboard').style.display = 'block';
+                    
+                    addLog('Backend connected successfully', 'success');
+                    
+                    // Initial data load
+                    await refreshData();
+                    
+                    // Start polling
+                    updateInterval = setInterval(refreshData, 5000);
+                } else {
+                    throw new Error('Backend not healthy');
+                }
+            } catch (error) {
+                document.getElementById('loading').innerHTML = `
+                    <div style="color: #f48771;">
+                        <h2>❌ Connection Failed</h2>
+                        <p>Cannot connect to backend at ${API_BASE}</p>
+                        <p>Make sure the server is running:</p>
+                        <code style="background: #2d2d2d; padding: 10px; border-radius: 5px; display: inline-block; margin-top: 10px;">
+                            python -m uvicorn mcp_server.main:app --host 127.0.0.1 --port 8000
+                        </code>
+                        <br><br>
+                        <button class="btn" onclick="location.reload()">🔄 Retry</button>
+                    </div>
+                `;
+            }
+        }
+        
+        // Refresh all data
+        async function refreshData() {
+            try {
+                // Get health status
+                const health = await fetch(`${API_BASE}/health`).then(r => r.json());
+                updateHealthStatus(health);
+                
+                // Get summary stats
+                const stats = await fetch(`${API_BASE}/stats/summary`).then(r => r.json());
+                updateMetrics(stats);
+                
+                // Get incidents
+                const incidents = await fetch(`${API_BASE}/incidents?limit=5`).then(r => r.json());
+                if (incidents.incidents && incidents.incidents.length > 0) {
+                    updateSuccessRate(incidents.incidents);
+                }
+            } catch (error) {
+                addLog(`Error fetching data: ${error.message}`, 'error');
+            }
+        }
+        
+        function updateHealthStatus(health) {
+            const k8sStatus = health.services.kubernetes === 'healthy' ? 'badge-success' : 'badge-warning';
+            const promStatus = health.services.prometheus === 'healthy' ? 'badge-success' : 'badge-warning';
+            
+            document.getElementById('k8s-status').className = `badge ${k8sStatus}`;
+            document.getElementById('k8s-status').textContent = health.services.kubernetes;
+            
+            document.getElementById('prom-status').className = `badge ${promStatus}`;
+            document.getElementById('prom-status').textContent = health.services.prometheus;
+        }
+        
+        function updateMetrics(stats) {
+            document.getElementById('cpu-value').textContent = stats.cpu ? `${stats.cpu.toFixed(1)}%` : '0%';
+            document.getElementById('memory-value').textContent = stats.memory ? `${stats.memory.toFixed(1)}%` : '0%';
+            document.getElementById('pods-value').textContent = stats.pods || 0;
+            document.getElementById('cost-value').textContent = `$${(stats.daily_cost || 0).toFixed(2)}`;
+        }
+        
+        function updateSuccessRate(incidents) {
+            const successful = incidents.filter(i => i.result && i.result.success).length;
+            const rate = incidents.length > 0 ? (successful / incidents.length * 100).toFixed(1) : 100;
+            document.getElementById('success-rate').textContent = `${rate}%`;
+        }
+        
+        // Chaos functions
+        async function triggerCPUSpike() {
+            try {
+                addLog('Triggering CPU spike simulation...', 'info');
+                const response = await fetch(`${API_BASE}/simulate/cpu_spike?duration=120`, {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    addLog('🔥 CPU spike started! Watch metrics rise...', 'success');
+                } else {
+                    addLog('Failed to trigger CPU spike', 'error');
+                }
+            } catch (error) {
+                addLog(`Error: ${error.message}`, 'error');
+            }
+        }
+        
+        async function crashPod() {
+            try {
+                addLog('Crashing random pod...', 'info');
+                const response = await fetch(`${API_BASE}/simulate/crash`, {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    addLog(`💥 Pod crashed! Auto-healing in progress...`, 'success');
+                } else {
+                    addLog('Failed to crash pod', 'error');
+                }
+            } catch (error) {
+                addLog(`Error: ${error.message}`, 'error');
+            }
+        }
+        
+        function viewDocs() {
+            window.open(`${API_BASE}/docs`, '_blank');
+        }
+        
+        function addLog(message, type = 'info') {
+            const log = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            entry.textContent = `[${timestamp}] ${message}`;
+            log.insertBefore(entry, log.firstChild);
+            
+            // Keep only last 20 entries
+            while (log.children.length > 20) {
+                log.removeChild(log.lastChild);
+            }
+        }
+        
+        // Start
+        init();
+    </script>
+</body>
+</html>
