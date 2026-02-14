@@ -1,65 +1,152 @@
-# 🎨 Frontend Development Guide for Lovable
+# 🎨 Frontend - SentinelOps Dashboard
 
-## ✅ Backend Status: READY
+## ✅ Status: FULLY INTEGRATED
 
-The SentinelOps backend is **fully operational** and ready for frontend integration!
+The SentinelOps frontend is **fully integrated** with the backend API!
 
-### Server Info
-- **URL:** `http://127.0.0.1:8000`
-- **Status:** Running in separate PowerShell window
-- **API Docs:** http://127.0.0.1:8000/docs (interactive Swagger UI)
+### Quick Launch
+
+```bash
+# Start backend (Terminal 1)
+python test_backend.py
+
+# Start frontend (Terminal 2)
+cd frontend
+npm install  # First time only
+npm run dev
+```
+
+Visit:
+- **Frontend:** http://localhost:5173
+- **Backend API:** http://localhost:8000
+- **API Docs:** http://localhost:8000/docs
 
 ---
 
-## 🚀 Quick Start for Lovable
+## 📂 Frontend Location
 
-### 1. The ONE Endpoint You Need
+The dashboard is located in the `frontend/` directory and is a fully-featured React + TypeScript application.
 
-```javascript
-// GET http://127.0.0.1:8000/dashboard/stats?hours=24
-// Returns EVERYTHING in one call:
+**Tech Stack:**
+- React 18 + TypeScript
+- Vite (build tool)
+- Tailwind CSS + shadcn/ui
+- Recharts (charts)
+- Real-time API integration
 
-fetch('http://127.0.0.1:8000/dashboard/stats?hours=24')
-  .then(r => r.json())
-  .then(data => {
-    // data.cluster - pod counts, health status
-    // data.metrics - CPU %, memory %, pod count
-    // data.cost - hourly, daily, monthly costs
-    // data.savings - total saved, projections
-    // data.incidents - recent events, success rate
-    // data.recommendations - optimization tips
-  });
+See [frontend/README.md](frontend/README.md) for complete documentation.
+
+---
+
+## 🎯 Features
+
+### ✨ What's Working
+
+- ✅ **Real-time Metrics** - CPU, memory, pod counts update every 3 seconds
+- ✅ **Live Dashboard** - Complete stats refresh every 10 seconds
+- ✅ **Cost Analysis** - Hourly/daily/monthly costs with savings tracking
+- ✅ **Incident Timeline** - Real-time log of all auto-healing actions
+- ✅ **AI Recommendations** - Smart optimization suggestions
+- ✅ **Chaos Engineering** - CPU spike, crash pod, cascade failure tests
+- ✅ **Error Handling** - Graceful fallbacks and loading states
+- ✅ **Responsive Design** - Works on desktop, tablet, mobile
+
+### 🎨 UI Highlights
+
+- Stadium scoreboard aesthetic (LED fonts, neon borders)
+- Animated metrics and smooth transitions
+- Real-time status indicators
+- Toast notifications for events
+- Color-coded severity levels
+
+---
+
+## 🚀 Quick Start for Development
+
+### 1. Install Dependencies
+
+```bash
+cd frontend
+npm install
+# or use bun for faster installs
+bun install
 ```
 
-### 2. Real-time Updates (Poll every 5-10 seconds)
+### 2. Configure Environment
 
-```javascript
-// GET http://127.0.0.1:8000/stats/summary
-// Lightweight for frequent polling
+The `.env` files are already set up:
 
-setInterval(() => {
-  fetch('http://127.0.0.1:8000/stats/summary')
-    .then(r => r.json())
-    .then(data => {
-      // data.pods - pod count
-      // data.cpu - CPU %
-      // data.memory - Memory %
-      // data.daily_cost - cost per day
-    });
-}, 5000);
+```bash
+# .env.development
+VITE_API_URL=http://localhost:8000
+```
+
+### 3. Run Development Server
+
+```bash
+npm run dev
+# or
+bun run dev
+```
+
+Frontend will be available at: http://localhost:5173
+
+---
+
+## 🔌 API Integration
+
+### Architecture
+
+The frontend uses a clean, typed API layer:
+
+```
+src/lib/
+├── api-config.ts    # Configuration & endpoints
+├── api-types.ts     # TypeScript interfaces
+├── api-service.ts   # API service class
+└── api-hooks.ts     # React hooks for data fetching
+```
+
+### Usage Examples
+
+#### Fetch Dashboard Data
+
+```typescript
+import { useDashboard } from '@/lib/api-hooks';
+
+const { data, isLoading, error } = useDashboard({
+  refreshInterval: 10000,  // 10 seconds
+  hours: 24,
+});
+
+// data contains: cluster, metrics, cost, savings, incidents, recommendations
+```
+
+#### Get Real-time Metrics
+
+```typescript
+import { useRealtimeMetrics } from '@/lib/api-hooks';
+
+const { data: metrics } = useRealtimeMetrics(true);
+
+// Updates every 3 seconds: cpu, memory, pods, daily_cost
+```
+
+#### Trigger Chaos Tests
+
+```typescript
+import { useChaosSimulation } from '@/lib/api-hooks';
+
+const { simulateCPUSpike, isSimulating } = useChaosSimulation();
+
+await simulateCPUSpike(120); // 120 second CPU spike
 ```
 
 ---
 
 ## 🎯 Key Endpoints
 
-### Health & Status
-```
-GET  /health               - Server health check
-GET  /                     - API information
-```
-
-### Dashboard (⭐ Use these!)
+### Dashboard (⭐ Primary endpoints)
 ```
 GET  /dashboard/stats?hours=24    - All-in-one comprehensive data
 GET  /stats/summary               - Quick stats for real-time updates
@@ -97,7 +184,10 @@ GET  /incidents?limit=50          - Get incident history
 POST /simulate/cpu_spike?duration=120
 POST /simulate/crash
 POST /simulate/cascade
+POST /simulate/cleanup
+GET  /chaos/status
 ```
+
 
 ---
 

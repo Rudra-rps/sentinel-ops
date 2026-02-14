@@ -159,85 +159,125 @@ No human intervention. No manual actions. Just intelligent, autonomous operation
 
 ### Prerequisites
 
-```bash
-# Required
+**Required:**
 - Python 3.11 or higher
-- Docker Desktop
+- Docker Desktop (must be running)
 - kubectl
-- minikube
+- Minikube or any Kubernetes cluster
+- Node.js 18+ (for frontend)
 
-# Optional
+**Optional:**
 - Helm (for advanced deployments)
+
+### One-Command Start (Windows)
+
+```powershell
+# Automated setup script
+.\start.ps1
 ```
 
-### Installation
+This will automatically:
+- ✅ Activate Python virtual environment
+- ✅ Start backend server
+- ✅ Install frontend dependencies
+- ✅ Start frontend dashboard
 
-**1. Clone the repository**
-```bash
-git clone https://github.com/yourusername/sentinelops
-cd sentinelops
+### Manual Step-by-Step Setup
+
+**1. Start Docker Desktop**
+```powershell
+# Make sure Docker Desktop is running
+# Check system tray for Docker whale icon
 ```
 
 **2. Start Kubernetes cluster**
-```bash
-# Start minikube
-minikube start --cpus=4 --memory=8192
+```powershell
+# Start minikube (requires Docker)
+minikube start
 
-# Create demo namespace
-kubectl create namespace demo
+# Verify cluster is running
+kubectl cluster-info
 ```
 
-**3. Deploy test application**
-```bash
-# Deploy nginx (3 replicas)
+**3. Deploy demo applications**
+```powershell
+# Create namespace (if not exists)
+kubectl create namespace demo
+
+# Deploy nginx demo app
 kubectl apply -f demo/nginx-deploy.yaml
+
+# Deploy Prometheus for metrics
+kubectl apply -f demo/prometheus-deploy.yaml
 
 # Verify pods are running
 kubectl get pods -n demo
+kubectl get pods -n monitoring
 ```
 
-**4. Install monitoring stack**
-```bash
-# Deploy Prometheus
-kubectl apply -f demo/prometheus-deploy.yaml
-
-# Wait for Prometheus to be ready
-kubectl wait --for=condition=ready pod -l app=prometheus -n monitoring --timeout=300s
-
-# Port-forward Prometheus (in separate terminal)
+**4. Setup Prometheus port forwarding**
+```powershell
+# Run in background (required for cost analysis)
 kubectl port-forward -n monitoring svc/prometheus 9090:9090
+
+# Leave this terminal open or run as background job
+# PowerShell background: Start-Job { kubectl port-forward -n monitoring svc/prometheus 9090:9090 }
 ```
 
-**5. Setup Python environment**
-```bash
-# Create virtual environment
+**5. Setup Python backend**
+```powershell
+# Create virtual environment (first time only)
 python -m venv venv
 
-# Activate (Windows)
+# Activate virtual environment
 .\venv\Scripts\Activate.ps1
 
-# Activate (Mac/Linux)
-source venv/bin/activate
-
-# Install dependencies
+# Install dependencies (first time only)
 pip install -r requirements.txt
-```
 
-**6. Start MCP Server**
-```bash
-# Start the API server
-python -m uvicorn mcp_server.main:app --host 0.0.0.0 --port 8000
+# Start backend server
+python -m uvicorn mcp_server.main:app --reload
 
-# Server will be available at http://localhost:8000
+# Backend will be available at http://localhost:8000
 # API docs at http://localhost:8000/docs
 ```
 
-**7. Start Decision Engine (Optional - for autonomous mode)**
-```bash
+**6. Setup frontend dashboard**
+```powershell
 # In a new terminal
-python agents/decision_engine.py
+cd frontend
 
-# The AI will now monitor and fix issues automatically every 60 seconds
+# Install dependencies (first time only)
+npm install
+
+# Start development server
+npm run dev
+
+# Dashboard will open at http://localhost:8080/
+# (or http://localhost:5173/ depending on port availability)
+```
+
+**7. Verify everything is working**
+```powershell
+# Test backend health
+curl http://localhost:8000/health
+
+# Should return:
+# {"status":"healthy","services":{"kubernetes":"healthy","prometheus":"healthy"}}
+
+# Test dashboard data
+curl http://localhost:8000/dashboard/stats?hours=24
+
+# Open browser and navigate to frontend URL
+# You should see live metrics from your cluster
+```
+
+**8. Run automated tests**
+```powershell
+# Test all backend endpoints
+python test_backend.py
+
+# Should show 100% success rate
 ```
 
 ---
@@ -418,6 +458,57 @@ python test_backend.py
 
 ---
 
+## 🎨 Frontend Dashboard
+
+SentinelOps includes a **fully integrated React + TypeScript dashboard** with real-time monitoring!
+
+### ✨ Features
+
+- **Real-time metrics** - CPU, memory, pod counts (updates every 3s)
+- **Live cost analysis** - Hourly/daily/monthly costs with savings tracking
+- **Incident timeline** - Real-time log of all auto-healing actions
+- **AI recommendations** - Smart optimization suggestions
+- **Chaos engineering controls** - Trigger tests directly from UI
+- **Stadium scoreboard aesthetic** - LED fonts, neon borders, smooth animations
+
+### Quick Start
+
+**Option 1: Use startup script (Windows)**
+```bash
+# Starts backend + frontend in separate windows
+./start.ps1
+# or
+./start.bat
+```
+
+**Option 2: Manual start**
+```bash
+# Terminal 1 - Backend
+python test_backend.py
+
+# Terminal 2 - Frontend
+cd frontend
+npm install  # First time only
+npm run dev
+```
+
+**Access:**
+- **Frontend:** http://localhost:5173
+- **Backend API:** http://localhost:8000
+- **API Docs:** http://localhost:8000/docs
+
+### Tech Stack
+
+- React 18 + TypeScript
+- Vite build tool
+- Tailwind CSS + shadcn/ui
+- Recharts for visualizations
+- Real-time API polling
+
+**See [frontend/README.md](frontend/README.md) for complete documentation.**
+
+---
+
 ## 🎬 Live Demo
 
 ### Scenario 1: Auto-Healing Pod Crash
@@ -518,6 +609,141 @@ Decision Engine scales back down to 3 replicas to save costs
 
 ---
 
+## 🧪 Testing
+
+### Automated Backend Tests
+
+Test all API endpoints automatically:
+
+```powershell
+python test_backend.py
+```
+
+**What it tests:**
+- ✅ Health & Core Endpoints (/, /health)
+- ✅ Metrics (CPU, memory, all metrics)
+- ✅ Kubernetes Resources (pods, deployments, nodes)
+- ✅ Dashboard Stats (comprehensive & summary)
+- ✅ Cost Analysis (current, savings, recommendations, breakdown)
+- ✅ Incident Tracking
+- ✅ Chaos Engineering Status
+
+**Expected output:** 100% success rate with all tests passing
+
+### Manual API Testing
+
+```powershell
+# Health check
+curl http://localhost:8000/health
+
+# Get comprehensive dashboard stats
+curl http://localhost:8000/dashboard/stats?hours=24
+
+# Get quick summary
+curl http://localhost:8000/stats/summary
+
+# View recent incidents
+curl http://localhost:8000/incidents?limit=10
+
+# Check chaos status
+curl http://localhost:8000/chaos/status
+```
+
+### Frontend Testing
+
+```powershell
+cd frontend
+
+# Run unit tests
+npm run test
+
+# Run tests in watch mode
+npm run test:watch
+```
+
+### Integration Testing
+
+Test the complete stack:
+
+1. **Start all services**
+   ```powershell
+   # Terminal 1: Prometheus
+   kubectl port-forward -n monitoring svc/prometheus 9090:9090
+   
+   # Terminal 2: Backend
+   python -m uvicorn mcp_server.main:app --reload
+   
+   # Terminal 3: Frontend
+   cd frontend && npm run dev
+   ```
+
+2. **Verify in browser (http://localhost:8080/)**
+   - ✅ Dashboard loads with live data
+   - ✅ Metrics update in real-time
+   - ✅ Incident feed shows recent events
+   - ✅ Cost analysis displays correctly
+
+3. **Run chaos test**
+   ```powershell
+   curl -X POST "http://localhost:8000/simulate/cpu_spike?duration=120"
+   ```
+   
+4. **Watch auto-remediation**
+   - Monitor dashboard for:
+     - CPU spike detection (>80%)
+     - Auto-scaling decision
+     - Pods increase (3 → 5)
+     - Recovery (5 → 3)
+     - Incident logged
+     - MTTR < 60 seconds
+
+### Troubleshooting Tests
+
+**Backend timeout errors:**
+```powershell
+# Verify Kubernetes is accessible
+kubectl cluster-info
+
+# Should NOT show connection errors
+# If it does:
+# 1. Start Docker Desktop
+# 2. Start Minikube: minikube start
+# 3. Restart backend
+```
+
+**No metrics data:**
+```powershell
+# Check pods are running
+kubectl get pods -n demo
+kubectl get pods -n monitoring
+
+# Deploy if missing
+kubectl apply -f demo/nginx-deploy.yaml
+kubectl apply -f demo/prometheus-deploy.yaml
+```
+
+**Frontend "Request timeout":**
+```powershell
+# This means backend can't reach Kubernetes
+# Follow these steps:
+
+# 1. Check backend health
+curl http://localhost:8000/health
+# Should return: {"status":"healthy"}
+
+# 2. If degraded, restart Kubernetes connection:
+minikube start
+kubectl apply -f demo/nginx-deploy.yaml
+kubectl port-forward -n monitoring svc/prometheus 9090:9090
+
+# 3. Restart backend
+python -m uvicorn mcp_server.main:app --reload
+
+# 4. Hard refresh browser (Ctrl+Shift+R)
+```
+
+---
+
 ## 🔧 Configuration
 
 Edit `mcp_server/config.py`:
@@ -578,35 +804,37 @@ sentinelops/
 
 ## 🚧 Roadmap
 
-### ✅ Completed (Days 1-2)
+### ✅ Completed
 - [x] Kubernetes & Prometheus integration
-- [x] Real-time monitoring
+- [x] Real-time monitoring with timeout handling
 - [x] Threshold-based analysis
 - [x] Auto-scaling (up/down)
 - [x] Auto-healing (crash recovery)
 - [x] Incident tracking & logging
-- [x] RESTful API
+- [x] RESTful API with 15+ endpoints
 - [x] Chaos engineering tools
 - [x] Decision engine (autonomous loop)
+- [x] Cost analyzer with savings calculator
+- [x] **React + TypeScript dashboard**
+- [x] **Real-time metrics visualization**
+- [x] **Interactive API testing suite**
+- [x] **Comprehensive documentation**
 
-### 🔜 Coming Soon (Day 3)
-- [ ] Cost analyzer with savings calculator
-- [ ] Web dashboard (HTML + charts)
+### 🔜 Coming Soon
+- [ ] Machine learning for predictive scaling
 - [ ] Grafana integration
-- [ ] Demo video & script
-- [ ] Advanced visualizations
+- [ ] Demo video & tutorial
+- [ ] Advanced anomaly detection (ML-based)
 
 ### 🔮 Future Enhancements
-- [ ] Machine learning for predictive scaling
 - [ ] Multi-cluster support
-- [ ] Advanced anomaly detection (ML-based)
 - [ ] Slack/PagerDuty integration
 - [ ] Natural language query interface
-- [ ] Cost forecasting
+- [ ] Cost forecasting with ML
 - [ ] Custom webhook support
-- [ ] Terraform deployment
-- [ ] Helm chart
+- [ ] Terraform/Helm deployment
 - [ ] GitOps integration (ArgoCD/Flux)
+- [ ] Multi-cloud support (AWS EKS, Azure AKS, GCP GKE)
 
 ---
 

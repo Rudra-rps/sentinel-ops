@@ -20,9 +20,13 @@ class K8sClient:
                 cmd,
                 capture_output=True,
                 text=True,
-                check=True
+                check=True,
+                timeout=5  # Add 5 second timeout to prevent hanging
             )
             return {"success": True, "output": result.stdout, "error": None}
+        except subprocess.TimeoutExpired:
+            logger.error(f"Command timed out: {' '.join(cmd)}")
+            return {"success": False, "output": None, "error": "Command timed out"}
         except subprocess.CalledProcessError as e:
             logger.error(f"Command failed: {' '.join(cmd)} - {e.stderr}")
             return {"success": False, "output": None, "error": e.stderr}

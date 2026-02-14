@@ -1,0 +1,172 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap');
+
+@layer base {
+  :root {
+    --background: 220 25% 6%;
+    --foreground: 210 20% 92%;
+
+    --card: 220 20% 10%;
+    --card-foreground: 210 20% 92%;
+
+    --popover: 220 20% 10%;
+    --popover-foreground: 210 20% 92%;
+
+    --primary: 160 80% 45%;
+    --primary-foreground: 220 25% 6%;
+
+    --secondary: 220 15% 18%;
+    --secondary-foreground: 210 20% 85%;
+
+    --muted: 220 15% 15%;
+    --muted-foreground: 215 15% 55%;
+
+    --accent: 45 95% 55%;
+    --accent-foreground: 220 25% 6%;
+
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 210 20% 95%;
+
+    --border: 220 15% 18%;
+    --input: 220 15% 18%;
+    --ring: 160 80% 45%;
+
+    --radius: 0.5rem;
+
+    --info: 190 85% 50%;
+    --info-foreground: 220 25% 6%;
+
+    --stadium-glow: 160 80% 45%;
+    --stadium-amber: 45 95% 55%;
+    --stadium-red: 0 75% 55%;
+    --stadium-cyan: 190 85% 50%;
+
+    --sidebar-background: 220 20% 8%;
+    --sidebar-foreground: 210 20% 85%;
+    --sidebar-primary: 160 80% 45%;
+    --sidebar-primary-foreground: 220 25% 6%;
+    --sidebar-accent: 220 15% 15%;
+    --sidebar-accent-foreground: 210 20% 85%;
+    --sidebar-border: 220 15% 18%;
+    --sidebar-ring: 160 80% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Rajdhani', sans-serif;
+  }
+}
+
+@layer components {
+  .font-led {
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .font-scoreboard {
+    font-family: 'Orbitron', sans-serif;
+  }
+
+  .font-body {
+    font-family: 'Rajdhani', sans-serif;
+  }
+
+  .scoreboard-card {
+    @apply relative overflow-hidden rounded-lg border border-border bg-card;
+    box-shadow:
+      0 0 15px hsl(var(--stadium-glow) / 0.08),
+      inset 0 1px 0 hsl(210 20% 92% / 0.05);
+  }
+
+  .scoreboard-card:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 0 25px hsl(var(--stadium-glow) / 0.15),
+      0 8px 30px hsl(220 25% 6% / 0.4),
+      inset 0 1px 0 hsl(210 20% 92% / 0.08);
+  }
+
+  .led-text {
+    font-family: 'Share Tech Mono', monospace;
+    text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+  }
+
+  .led-text-green {
+    color: hsl(var(--primary));
+    text-shadow: 0 0 10px hsl(var(--primary) / 0.6), 0 0 20px hsl(var(--primary) / 0.3);
+  }
+
+  .led-text-amber {
+    color: hsl(var(--accent));
+    text-shadow: 0 0 10px hsl(var(--accent) / 0.6), 0 0 20px hsl(var(--accent) / 0.3);
+  }
+
+  .led-text-red {
+    color: hsl(var(--destructive));
+    text-shadow: 0 0 10px hsl(var(--destructive) / 0.6), 0 0 20px hsl(var(--destructive) / 0.3);
+  }
+
+  .led-text-cyan {
+    color: hsl(var(--info));
+    text-shadow: 0 0 10px hsl(var(--info) / 0.6), 0 0 20px hsl(var(--info) / 0.3);
+  }
+
+  .neon-border-green {
+    border-color: hsl(var(--primary) / 0.4);
+    box-shadow: 0 0 8px hsl(var(--primary) / 0.1), inset 0 0 8px hsl(var(--primary) / 0.05);
+  }
+
+  .neon-border-amber {
+    border-color: hsl(var(--accent) / 0.4);
+    box-shadow: 0 0 8px hsl(var(--accent) / 0.1), inset 0 0 8px hsl(var(--accent) / 0.05);
+  }
+
+  .neon-border-red {
+    border-color: hsl(var(--destructive) / 0.4);
+    box-shadow: 0 0 8px hsl(var(--destructive) / 0.1), inset 0 0 8px hsl(var(--destructive) / 0.05);
+  }
+
+  .stadium-bg {
+    background:
+      radial-gradient(ellipse at 50% 0%, hsl(var(--stadium-glow) / 0.06) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 50%, hsl(var(--stadium-cyan) / 0.03) 0%, transparent 50%),
+      radial-gradient(ellipse at 20% 80%, hsl(var(--stadium-amber) / 0.03) 0%, transparent 50%),
+      hsl(var(--background));
+  }
+
+  .ticker-scroll {
+    animation: ticker 30s linear infinite;
+  }
+
+  @keyframes ticker {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  @keyframes count-flash {
+    0% { opacity: 1; }
+    50% { opacity: 0.6; text-shadow: 0 0 20px currentColor; }
+    100% { opacity: 1; }
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  .animate-count-flash {
+    animation: count-flash 0.3s ease-out;
+  }
+}
