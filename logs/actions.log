@@ -830,3 +830,30 @@ Unable to connect to the server: dial tcp 127.0.0.1:56789: connectex: No connect
 2026-02-15 13:59:58,636 - mcp_server.main - INFO - Kubernetes Namespace: demo
 2026-02-15 13:59:58,636 - mcp_server.main - INFO - Prometheus URL: http://localhost:9090
 2026-02-15 13:59:58,636 - mcp_server.main - INFO - ============================================================
+2026-02-15 18:02:21,060 - mcp_server.main - INFO - ============================================================
+2026-02-15 18:02:21,061 - mcp_server.main - INFO - SentinelOps MCP Server Starting
+2026-02-15 18:02:21,061 - mcp_server.main - INFO - Kubernetes Namespace: demo
+2026-02-15 18:02:21,061 - mcp_server.main - INFO - Prometheus URL: http://localhost:9090
+2026-02-15 18:02:21,062 - mcp_server.main - INFO - ============================================================
+2026-02-15 18:02:31,190 - agents.cost_analyzer - ERROR - Error calculating savings: 'IncidentTracker' object has no attribute 'get_timeline'
+2026-02-15 18:02:31,338 - agents.cost_analyzer - ERROR - Error generating recommendations: 'IncidentTracker' object has no attribute 'get_timeline'
+2026-02-15 18:03:01,728 - agents.cost_analyzer - ERROR - Error calculating savings: 'IncidentTracker' object has no attribute 'get_timeline'
+2026-02-15 18:03:01,884 - agents.cost_analyzer - ERROR - Error generating recommendations: 'IncidentTracker' object has no attribute 'get_timeline'
+2026-02-15 18:03:25,879 - agents.cost_analyzer - ERROR - Error calculating savings: 'IncidentTracker' object has no attribute 'get_timeline'
+2026-02-15 18:03:26,037 - agents.cost_analyzer - ERROR - Error generating recommendations: 'IncidentTracker' object has no attribute 'get_timeline'
+2026-02-15 18:03:55,310 - agents.cost_analyzer - ERROR - Error calculating savings: 'IncidentTracker' object has no attribute 'get_timeline'
+2026-02-15 18:03:55,465 - agents.cost_analyzer - ERROR - Error generating recommendations: 'IncidentTracker' object has no attribute 'get_timeline'
+2026-02-15 18:04:29,516 - agents.cost_analyzer - ERROR - Error calculating savings: 'IncidentTracker' object has no attribute 'get_timeline'
+2026-02-15 18:04:29,678 - agents.cost_analyzer - ERROR - Error generating recommendations: 'IncidentTracker' object has no attribute 'get_timeline'
+2026-02-15 18:04:37,062 - agents.cost_analyzer - ERROR - Error calculating savings: 'IncidentTracker' object has no attribute 'get_timeline'
+2026-02-15 18:04:37,220 - agents.cost_analyzer - ERROR - Error generating recommendations: 'IncidentTracker' object has no attribute 'get_timeline'
+2026-02-15 18:04:47,383 - agents.cost_analyzer - ERROR - Error calculating savings: 'IncidentTracker' object has no attribute 'get_timeline'
+2026-02-15 18:04:47,676 - agents.cost_analyzer - ERROR - Error generating recommendations: 'IncidentTracker' object has no attribute 'get_timeline'
+2026-02-15 18:04:51,568 - tools.k8s_client - INFO - Deleted pod nginx-demo-6fd48d9d57-b9n5p in demo
+2026-02-15 18:04:51,568 - tools.chaos - INFO - Crashed pod: nginx-demo-6fd48d9d57-b9n5p
+2026-02-15 18:04:57,088 - agents.cost_analyzer - ERROR - Error calculating savings: 'IncidentTracker' object has no attribute 'get_timeline'
+2026-02-15 18:04:57,249 - agents.cost_analyzer - ERROR - Error generating recommendations: 'IncidentTracker' object has no attribute 'get_timeline'
+2026-02-15 18:05:07,068 - agents.cost_analyzer - ERROR - Error calculating savings: 'IncidentTracker' object has no attribute 'get_timeline'
+2026-02-15 18:05:07,260 - agents.cost_analyzer - ERROR - Error generating recommendations: 'IncidentTracker' object has no attribute 'get_timeline'
+2026-02-15 18:05:10,069 - agents.cost_analyzer - ERROR - Error calculating savings: 'IncidentTracker' object has no attribute 'get_timeline'
+2026-02-15 18:05:10,230 - agents.cost_analyzer - ERROR - Error generating recommendations: 'IncidentTracker' object has no attribute 'get_timeline'

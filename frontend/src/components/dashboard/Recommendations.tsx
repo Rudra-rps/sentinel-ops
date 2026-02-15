@@ -1,5 +1,5 @@
 import { Lightbulb, ArrowRight, Sparkles } from "lucide-react";
-import type { Recommendation } from "@/lib/mock-data";
+import type { Recommendation } from "@/lib/api-types";
 import { toast } from "sonner";
 
 interface RecommendationsProps {
@@ -32,7 +32,7 @@ const Recommendations = ({ recommendations }: RecommendationsProps) => (
           </div>
           <p className="font-body text-xs text-muted-foreground mb-2">{rec.description}</p>
           <div className="flex items-center justify-between">
-            <span className="font-led text-xs text-primary">Saves {rec.potentialSavings}</span>
+            <span className="font-led text-xs text-primary">Saves {rec.potentialSavings || rec.potential_savings || 'N/A'}</span>
             <button
               onClick={() => toast.success(`Applied: ${rec.title}`)}
               className="flex items-center gap-1 font-scoreboard text-[10px] tracking-wider text-primary hover:text-primary/80 transition-colors"

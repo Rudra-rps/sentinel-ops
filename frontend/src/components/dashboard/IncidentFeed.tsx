@@ -1,5 +1,5 @@
 import { CheckCircle, AlertTriangle, XCircle, Info } from "lucide-react";
-import type { Incident } from "@/lib/mock-data";
+import type { Incident } from "@/lib/api-types";
 
 interface IncidentFeedProps {
   incidents: Incident[];
@@ -43,10 +43,10 @@ const IncidentFeed = ({ incidents }: IncidentFeedProps) => (
                   </span>
                 </div>
                 <p className="font-body text-xs text-muted-foreground mt-0.5">
-                  ↳ {incident.action}
+                  ↳ {incident.action_text || (incident.action ? `${incident.action.type}: ${incident.action.target}` : incident.title || 'Action taken')}
                 </p>
                 <p className="font-led text-[10px] text-primary mt-1">
-                  ✓ Resolved in {incident.resolvedIn}
+                  ✓ {incident.resolvedIn || (incident.result?.duration_ms ? `Resolved in ${incident.result.duration_ms}ms` : 'Completed')}
                 </p>
               </div>
             </div>
