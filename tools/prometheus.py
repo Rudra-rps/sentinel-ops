@@ -14,6 +14,9 @@ class PrometheusClient:
         self.base_url = base_url
         self.query_url = f"{base_url}/api/v1/query"
         self.query_range_url = f"{base_url}/api/v1/query_range"
+        # Keep API responses responsive even when Prometheus is unavailable.
+        self.query_timeout = (0.5, 1.0)  # (connect, read) seconds
+        self.health_timeout = (0.5, 1.0)
     
     def _query(self, query: str) -> Optional[Dict]:
         """Execute Prometheus query"""
@@ -21,7 +24,7 @@ class PrometheusClient:
             response = requests.get(
                 self.query_url,
                 params={"query": query},
-                timeout=10
+                timeout=self.query_timeout
             )
             response.raise_for_status()
             data = response.json()
@@ -113,6 +116,18 @@ class PrometheusClient:
     
     def get_all_metrics(self, namespace: str = "demo") -> Dict:
         """Get all key metrics at once"""
+        if not self.is_healthy():
+            return {
+                "cpu_usage": 0.0,
+                "memory_usage": 0.0,
+                "pod_count": 0,
+                "pod_status": {"running": 0, "pending": 0, "failed": 0, "succeeded": 0},
+                "container_restarts": 0,
+                "node_cpu": 0.0,
+                "node_memory": 0.0,
+                "timestamp": datetime.now().isoformat()
+            }
+
         return {
             "cpu_usage": self.get_cpu_usage(namespace),
             "memory_usage": self.get_memory_usage(namespace),
@@ -127,7 +142,7 @@ class PrometheusClient:
     def is_healthy(self) -> bool:
         """Check if Prometheus is accessible"""
         try:
-            response = requests.get(f"{self.base_url}/-/healthy", timeout=5)
+            response = requests.get(f"{self.base_url}/-/healthy", timeout=self.health_timeout)
             return response.status_code == 200
         except:
             return False

@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sentinelops-backend
+  labels:
+    app: sentinelops-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sentinelops-backend
+  template:
+    metadata:
+      labels:
+        app: sentinelops-backend
+    spec:
+      containers:
+      - name: backend
+        image: REPLACE_WITH_REGISTRY/sentinelops-backend:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: PROMETHEUS_URL
+          value: "http://prometheus.monitoring.svc.cluster.local:9090"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sentinelops-backend
+spec:
+  selector:
+    app: sentinelops-backend
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 8000

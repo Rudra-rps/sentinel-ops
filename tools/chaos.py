@@ -8,6 +8,7 @@ import random
 from pathlib import Path
 from typing import Dict, List
 from datetime import datetime
+import time
 
 sys.path.append(str(Path(__file__).parent.parent))
 
@@ -31,48 +32,40 @@ class ChaosEngine:
         Simulate CPU spike by deploying stress container
         """
         try:
-            stress_manifest = f"""
-apiVersion: v1
-kind: Pod
-metadata:
-  name: stress-test-cpu
-  namespace: {self.namespace}
-  labels:
-    app: stress-test
-spec:
-  containers:
-  - name: stress
-    image: polinux/stress
-    args:
-    - stress
-    - --cpu
-    - "4"
-    - --timeout
-    - "{duration}s"
-  restartPolicy: Never
-"""
-            
-            # Write manifest to temp file
-            manifest_file = Path("logs/stress-manifest.yaml")
-            manifest_file.write_text(stress_manifest)
-            
-            # Apply manifest
-            cmd = ["kubectl", "apply", "-f", str(manifest_file)]
+            # Use a unique pod name to avoid forbidden updates to existing pods
+            pod_name = f"stress-test-cpu-{int(time.time())}"
+
+            # Use `kubectl run` to create a one-off pod (restart=Never)
+            cmd = [
+                "kubectl", "-n", self.namespace, "run", pod_name,
+                "--image=polinux/stress",
+                "--restart=Never",
+                "--labels=app=stress-test",
+                "--",
+                "stress",
+                "--cpu",
+                "4",
+                "--timeout",
+                f"{duration}s",
+            ]
+
             result = subprocess.run(cmd, capture_output=True, text=True)
-            
+
             if result.returncode == 0:
-                logger.info(f"Started CPU spike simulation for {duration}s")
+                logger.info(f"Started CPU spike simulation for {duration}s (pod: {pod_name})")
                 self.active_simulations.append({
                     "type": "cpu_spike",
                     "started": datetime.now().isoformat(),
-                    "duration": duration
+                    "duration": duration,
+                    "pod": pod_name
                 })
-                
+
                 return {
                     "success": True,
                     "type": "cpu_spike",
                     "duration": duration,
-                    "message": f"CPU stress test started for {duration} seconds"
+                    "message": f"CPU stress test started for {duration} seconds (pod: {pod_name})",
+                    "pod": pod_name
                 }
             else:
                 logger.error(f"Failed to start CPU spike: {result.stderr}")
@@ -80,7 +73,7 @@ spec:
                     "success": False,
                     "error": result.stderr
                 }
-                
+
         except Exception as e:
             logger.error(f"Error simulating CPU spike: {e}")
             return {

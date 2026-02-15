@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sentinelops-frontend
+  labels:
+    app: sentinelops-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sentinelops-frontend
+  template:
+    metadata:
+      labels:
+        app: sentinelops-frontend
+    spec:
+      containers:
+      - name: frontend
+        image: REPLACE_WITH_REGISTRY/sentinelops-frontend:latest
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sentinelops-frontend
+spec:
+  selector:
+    app: sentinelops-frontend
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80

@@ -770,3 +770,63 @@ Unable to connect to the server: dial tcp 127.0.0.1:56789: connectex: No connect
 2026-02-15 00:03:15,783 - mcp_server.main - INFO - Kubernetes Namespace: demo
 2026-02-15 00:03:15,783 - mcp_server.main - INFO - Prometheus URL: http://localhost:9090
 2026-02-15 00:03:15,783 - mcp_server.main - INFO - ============================================================
+2026-02-15 13:18:42,735 - mcp_server.main - INFO - ============================================================
+2026-02-15 13:18:42,735 - mcp_server.main - INFO - SentinelOps MCP Server Starting
+2026-02-15 13:18:42,735 - mcp_server.main - INFO - Kubernetes Namespace: demo
+2026-02-15 13:18:42,735 - mcp_server.main - INFO - Prometheus URL: http://localhost:9090
+2026-02-15 13:18:42,735 - mcp_server.main - INFO - ============================================================
+2026-02-15 13:36:13,529 - mcp_server.main - INFO - ============================================================
+2026-02-15 13:36:13,529 - mcp_server.main - INFO - SentinelOps MCP Server Starting
+2026-02-15 13:36:13,529 - mcp_server.main - INFO - Kubernetes Namespace: demo
+2026-02-15 13:36:13,530 - mcp_server.main - INFO - Prometheus URL: http://localhost:9090
+2026-02-15 13:36:13,530 - mcp_server.main - INFO - ============================================================
+2026-02-15 13:39:57,687 - mcp_server.main - INFO - ============================================================
+2026-02-15 13:39:57,687 - mcp_server.main - INFO - SentinelOps MCP Server Starting
+2026-02-15 13:39:57,687 - mcp_server.main - INFO - Kubernetes Namespace: demo
+2026-02-15 13:39:57,687 - mcp_server.main - INFO - Prometheus URL: http://localhost:9090
+2026-02-15 13:39:57,687 - mcp_server.main - INFO - ============================================================
+2026-02-15 13:40:04,281 - mcp_server.main - INFO - ============================================================
+2026-02-15 13:40:04,281 - mcp_server.main - INFO - SentinelOps MCP Server Starting
+2026-02-15 13:40:04,281 - mcp_server.main - INFO - Kubernetes Namespace: demo
+2026-02-15 13:40:04,281 - mcp_server.main - INFO - Prometheus URL: http://localhost:9090
+2026-02-15 13:40:04,281 - mcp_server.main - INFO - ============================================================
+2026-02-15 13:40:04,285 - mcp_server.main - INFO - ============================================================
+2026-02-15 13:40:04,285 - mcp_server.main - INFO - SentinelOps MCP Server Starting
+2026-02-15 13:40:04,285 - mcp_server.main - INFO - Kubernetes Namespace: demo
+2026-02-15 13:40:04,285 - mcp_server.main - INFO - Prometheus URL: http://localhost:9090
+2026-02-15 13:40:04,286 - mcp_server.main - INFO - ============================================================
+2026-02-15 13:41:08,294 - mcp_server.main - INFO - ============================================================
+2026-02-15 13:41:08,294 - mcp_server.main - INFO - SentinelOps MCP Server Starting
+2026-02-15 13:41:08,294 - mcp_server.main - INFO - Kubernetes Namespace: demo
+2026-02-15 13:41:08,295 - mcp_server.main - INFO - Prometheus URL: http://localhost:9090
+2026-02-15 13:41:08,295 - mcp_server.main - INFO - ============================================================
+2026-02-15 13:43:23,297 - mcp_server.main - INFO - ============================================================
+2026-02-15 13:43:23,298 - mcp_server.main - INFO - SentinelOps MCP Server Starting
+2026-02-15 13:43:23,298 - mcp_server.main - INFO - Kubernetes Namespace: demo
+2026-02-15 13:43:23,298 - mcp_server.main - INFO - Prometheus URL: http://localhost:9090
+2026-02-15 13:43:23,298 - mcp_server.main - INFO - ============================================================
+2026-02-15 13:44:10,627 - mcp_server.main - INFO - ============================================================
+2026-02-15 13:44:10,627 - mcp_server.main - INFO - SentinelOps MCP Server Starting
+2026-02-15 13:44:10,627 - mcp_server.main - INFO - Kubernetes Namespace: demo
+2026-02-15 13:44:10,627 - mcp_server.main - INFO - Prometheus URL: http://localhost:9090
+2026-02-15 13:44:10,628 - mcp_server.main - INFO - ============================================================
+2026-02-15 13:45:24,649 - mcp_server.main - INFO - ============================================================
+2026-02-15 13:45:24,649 - mcp_server.main - INFO - SentinelOps MCP Server Starting
+2026-02-15 13:45:24,649 - mcp_server.main - INFO - Kubernetes Namespace: demo
+2026-02-15 13:45:24,649 - mcp_server.main - INFO - Prometheus URL: http://localhost:9090
+2026-02-15 13:45:24,650 - mcp_server.main - INFO - ============================================================
+2026-02-15 13:59:32,355 - mcp_server.main - INFO - ============================================================
+2026-02-15 13:59:32,356 - mcp_server.main - INFO - SentinelOps MCP Server Starting
+2026-02-15 13:59:32,356 - mcp_server.main - INFO - Kubernetes Namespace: demo
+2026-02-15 13:59:32,356 - mcp_server.main - INFO - Prometheus URL: http://localhost:9090
+2026-02-15 13:59:32,356 - mcp_server.main - INFO - ============================================================
+2026-02-15 13:59:35,200 - mcp_server.main - INFO - ============================================================
+2026-02-15 13:59:35,200 - mcp_server.main - INFO - SentinelOps MCP Server Starting
+2026-02-15 13:59:35,201 - mcp_server.main - INFO - Kubernetes Namespace: demo
+2026-02-15 13:59:35,201 - mcp_server.main - INFO - Prometheus URL: http://localhost:9090
+2026-02-15 13:59:35,201 - mcp_server.main - INFO - ============================================================
+2026-02-15 13:59:58,636 - mcp_server.main - INFO - ============================================================
+2026-02-15 13:59:58,636 - mcp_server.main - INFO - SentinelOps MCP Server Starting
+2026-02-15 13:59:58,636 - mcp_server.main - INFO - Kubernetes Namespace: demo
+2026-02-15 13:59:58,636 - mcp_server.main - INFO - Prometheus URL: http://localhost:9090
+2026-02-15 13:59:58,636 - mcp_server.main - INFO - ============================================================
