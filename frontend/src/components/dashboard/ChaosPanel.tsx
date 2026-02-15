@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Zap, Bomb, Waves, Timer, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
-import { useChaosSimulation } from "@/lib/api-hooks";
+import { useChaosSimulation } from "@/lib/api-hooks.ts";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,17 +31,17 @@ const ChaosPanel = () => {
   const [activeTest, setActiveTest] = useState<string | null>(null);
   const [confirmTest, setConfirmTest] = useState<ChaosTest | null>(null);
   const [countdown, setCountdown] = useState(0);
-  
+
   const { simulateCPUSpike, simulateCrash, simulateCascade, isSimulating, error } = useChaosSimulation();
 
   const runTest = async (test: ChaosTest) => {
     setConfirmTest(null);
     setActiveTest(test.id);
     setCountdown(test.duration);
-    
+
     try {
       let result;
-      
+
       switch (test.id) {
         case "cpu":
           result = await simulateCPUSpike(test.duration);
@@ -53,7 +53,7 @@ const ChaosPanel = () => {
           result = await simulateCascade();
           break;
       }
-      
+
       toast.success(`${test.label} simulation started!`, {
         description: result?.message || 'Watch the dashboard for real-time updates',
       });
@@ -95,7 +95,7 @@ const ChaosPanel = () => {
         {tests.map((test) => {
           const isActive = activeTest === test.id;
           const isDisabled = !!activeTest || isSimulating;
-          
+
           return (
             <button
               key={test.id}

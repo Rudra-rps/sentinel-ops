@@ -7,7 +7,7 @@ import IncidentFeed from "@/components/dashboard/IncidentFeed";
 import Recommendations from "@/components/dashboard/Recommendations";
 import ChaosPanel from "@/components/dashboard/ChaosPanel";
 import Footer from "@/components/dashboard/Footer";
-import { useDashboard, useRealtimeMetrics, transformToChartData, formatIncident } from "@/lib/api-hooks";
+import { useDashboard, useRealtimeMetrics, transformToChartData, formatIncident } from "@/lib/api-hooks.ts";
 import type { ChartPoint } from "@/lib/api-types";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
@@ -52,7 +52,7 @@ const Index = () => {
         savedToday: dashboardData.savings.total_saved,
         monthlyProjection: dashboardData.cost.monthly,
         monthlySavings: dashboardData.savings.projected_monthly,
-        savingsPercent: dashboardData.savings.efficiency_score || 
+        savingsPercent: dashboardData.savings.efficiency_score ||
           ((dashboardData.savings.projected_monthly / dashboardData.cost.monthly) * 100),
       },
     };
