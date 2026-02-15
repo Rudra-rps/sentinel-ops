@@ -1,7 +1,7 @@
-# SentinelOps - Autonomous AI SRE
-# Python dependencies
+# Force binary wheels (no compilation)
+--prefer-binary
 
-# Web Framework
+# Core Framework
 fastapi==0.109.0
 uvicorn[standard]==0.27.0
 
@@ -16,13 +16,11 @@ prometheus-api-client==0.5.3
 
 # Additional FastAPI dependencies
 python-multipart==0.0.6
-pydantic==2.10.5
+pydantic==2.6.4
+pydantic-core==2.16.3
 
 # Data & Time
 python-dateutil==2.8.2
-
-# Logging (built-in but explicit for clarity)
-# logging - built-in
 
 # Testing (optional)
 pytest==7.4.3
